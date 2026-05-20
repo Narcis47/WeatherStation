@@ -2,6 +2,7 @@
 
 A full-stack IoT weather monitoring system — collect real-time temperature and pressure data from a BMP280 sensor via ESP32 and visualize it through a web dashboard.
 
+🌐 Live Demo: https://narcis47.github.io/WeatherStation/
 ---
 
 ## 🚧 Project Status
