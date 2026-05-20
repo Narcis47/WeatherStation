@@ -19,7 +19,9 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException{
         String path = request.getRequestURI();
-        if(path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")){
+        String method = request.getMethod();
+
+        if (method.equals("GET") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")){
             chain.doFilter(request,response);
             return;
         }
