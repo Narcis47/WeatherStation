@@ -1,8 +1,19 @@
 # 🌤️ WeatherStation
 
-A full-stack IoT weather monitoring system — collect real-time temperature and pressure data from a BMP280 sensor via ESP32 and visualize it through a web dashboard.
+A full-stack IoT weather monitoring system — collect real-time temperature and pressure data from a BMP280 sensor via ESP32 and visualize it through a live web dashboard.
+
+Built with Java & Spring Boot on the backend, vanilla HTML/CSS/JavaScript on the frontend, and C++ on the ESP32 microcontroller.
 
 🌐 Live Demo: https://narcis47.github.io/WeatherStation/
+---
+
+## 📸 Dashboard Preview
+
+<!-- Replace the line below with your actual screenshot -->
+![WeatherStation Dashboard](https://i.imgur.com/aYtnQc8.png)
+
+> *Live dashboard showing real-time temperature and pressure readings from a BMP280 sensor connected to an ESP32. The spike visible in the temperature graph was caused by placing a hand on the sensor.*
+
 ---
 
 ## 🚧 Project Status
@@ -11,7 +22,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 |---|---|
 | Backend (Spring Boot) | ✅ Complete |
 | Frontend (Dashboard) | ✅ Complete |
-| ESP32 + BMP280 Integration | 📅 Planned |
+| ESP32 + BMP280 Integration | ✅ Complete |
 | Multi-sensor Support | 📅 Planned |
 
 ---
@@ -26,6 +37,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 - 📈 Live dashboard with temperature and pressure charts
 - 🔄 Auto-refresh every 30 seconds
 - 📋 Recent readings table with daily min/max stats
+- 🔌 ESP32 auto-connects to predefined WiFi or scans for open networks
 
 ---
 
@@ -40,6 +52,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 | API Docs | Swagger UI (SpringDoc OpenAPI) |
 | Sensor | BMP280 (temperature + pressure) |
 | Microcontroller | ESP32 |
+| Firmware | Arduino IDE (C++) |
 | Frontend | HTML, CSS, JavaScript + Chart.js |
 | Build Tool | Maven |
 
@@ -48,7 +61,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 ## 📁 Project Structure
 
 ```
-weatherStation/
+WeatherStation/
 ├── src/main/java/narcis/weatherStation/
 │   ├── controller/
 │   │   └── DataController.java    ← /api/data
@@ -58,12 +71,14 @@ weatherStation/
 │   │   └── DataRepository.java
 │   ├── model/
 │   │   └── Data.java
-│   ├── CorsConfig.java
+│   ├── SecurityConfig.java        ← CORS configuration
 │   └── WeatherStationApplication.java
 ├── src/main/resources/
 │   └── application.properties
-└── frontend/
-    └── index.html                 ← Dashboard
+├── esp32/
+│   └── esp32.ino         ← ESP32 firmware
+└── docs/
+    └── index.html                 ← Dashboard frontend
 ```
 
 ---
@@ -100,14 +115,37 @@ CREATE TABLE weatherdata (
 
 ---
 
+## 🔧 Hardware
+
+| Component | Details |
+|---|---|
+| Microcontroller | ESP32 (any variant) |
+| Sensor | BMP280 — temperature + pressure |
+| Connection | I2C (address `0x76` or `0x77`) |
+| Power | USB power bank or 5V adapter |
+
+### Wiring
+
+```
+BMP280  →  ESP32
+VCC     →  3.3V
+GND     →  GND
+SDA     →  GPIO 21
+SCL     →  GPIO 22
+```
+
+---
+
 ## 🚀 Setup & Installation
 
 ### Prerequisites
 - Java 21
 - PostgreSQL
 - Maven
+- Arduino IDE with ESP32 board support
+- Adafruit BMP280 library
 
-### Steps
+### Backend Setup
 
 **1. Clone the repository**
 ```bash
@@ -120,11 +158,17 @@ cd WeatherStation
 CREATE DATABASE weather_station;
 ```
 
-**3. Run the schema** (copy SQL from above into DataGrip or psql)
+**3. Run the schema**
+```sql
+CREATE TABLE weatherdata (
+    id SERIAL PRIMARY KEY,
+    temp FLOAT NOT NULL,
+    pressure FLOAT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
 **4. Set environment variables**
-
-IntelliJ → Run/Debug Configurations → Environment Variables:
 ```
 DB_USERNAME=your_postgres_username
 DB_PASSWORD=your_postgres_password
@@ -135,9 +179,24 @@ DB_PASSWORD=your_postgres_password
 ./mvnw spring-boot:run
 ```
 
-**6. Open the frontend**
+### ESP32 Setup
 
-Open `frontend/index.html` with Live Server — the dashboard connects automatically to `http://localhost:8082`.
+**1.** Open `esp32/esp32.ino` in Arduino IDE
+
+**2.** Configure your credentials at the top of the file:
+```cpp
+const String WIFI_SSID     = "your_wifi_name";
+const String WIFI_PASSWORD = "your_wifi_password";
+const String BACKEND_URL   = "http://YOUR_IP:8082/api/data/add";
+```
+
+**3.** Upload to your ESP32
+
+**4.** Open Serial Monitor at **115200 baud** to see debug output
+
+### Frontend Setup
+
+Open `docs/index.html` with Live Server — the dashboard connects automatically to the backend.
 
 ---
 
@@ -166,12 +225,6 @@ GET /api/data/getAll
 
 ## 🔮 Roadmap
 
-### Phase 3 — ESP32 + BMP280 Integration
-- ESP32 reads BMP280 data via I2C
-- Sends POST request to backend every N seconds
-- WiFi configuration
-- Error handling and retry logic
-
 ### Phase 4 — Multi-sensor Support
 - Support for multiple ESP32 devices
 - Each sensor has a unique ID and location name
@@ -183,7 +236,7 @@ GET /api/data/getAll
 
 ## 🤖 AI Assistance
 
-The frontend dashboard (`frontend/index.html`) was built with the assistance of Claude AI (Anthropic). The backend, database schema, and ESP32 integration were designed and implemented manually.
+The frontend dashboard (`docs/index.html`) was built with the assistance of Claude AI (Anthropic). The backend, database schema, and ESP32 firmware were designed and implemented manually.
 
 ---
 
