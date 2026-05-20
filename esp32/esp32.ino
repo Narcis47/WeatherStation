@@ -23,6 +23,7 @@ const uint8_t I2C_ADDRESS = 0x76;   // BMP280 I2C address (0x76 or 0x77)
 const String WIFI_SSID     = "";     // WiFi network name     (leave empty to auto-scan)
 const String WIFI_PASSWORD = "";     // WiFi password         (leave empty for open networks)
 const String BACKEND_URL   = "";     // Backend endpoint URL  (e.g. http://192.168.1.x:8082/api/data/add)
+const String API_KEY       = "";     // Api Key
 
 // ── Timing ───────────────────────────────────────────────────
 const int SEND_INTERVAL_MS  = 30000; // Interval between data sends (ms)
@@ -172,6 +173,7 @@ void sendData(float temp, float pressure, const String& url) {
   HTTPClient http;
   http.begin(url);
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("X-API-KEY", API_KEY);
 
   String body = "{\"temp\":"     + String(temp, 2) + ",\"pressure\":" + String(pressure, 2) + "}";
 
