@@ -9,19 +9,22 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 | Component | Status |
 |---|---|
 | Backend (Spring Boot) | ✅ Complete |
-| Frontend (Dashboard) | 🔄 In Progress |
+| Frontend (Dashboard) | ✅ Complete |
 | ESP32 + BMP280 Integration | 📅 Planned |
 | Multi-sensor Support | 📅 Planned |
 
 ---
 
-## ✨ Current Features
+## ✨ Features
 
 - 📡 REST API to receive sensor data from ESP32
 - 🌡️ Store temperature and pressure readings in PostgreSQL
 - 🕐 Retrieve the most recent reading
 - 📊 Retrieve all historical readings
 - 📖 Swagger UI for API documentation and testing
+- 📈 Live dashboard with temperature and pressure charts
+- 🔄 Auto-refresh every 30 seconds
+- 📋 Recent readings table with daily min/max stats
 
 ---
 
@@ -36,6 +39,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 | API Docs | Swagger UI (SpringDoc OpenAPI) |
 | Sensor | BMP280 (temperature + pressure) |
 | Microcontroller | ESP32 |
+| Frontend | HTML, CSS, JavaScript + Chart.js |
 | Build Tool | Maven |
 
 ---
@@ -43,16 +47,22 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 ## 📁 Project Structure
 
 ```
-src/main/java/narcis/weatherStation/
-├── controller/
-│   └── DataController.java    ← /api/data
-├── service/
-│   └── DataService.java
-├── repository/
-│   └── DataRepository.java
-├── model/
-│   └── Data.java
-└── WeatherStationApplication.java
+weatherStation/
+├── src/main/java/narcis/weatherStation/
+│   ├── controller/
+│   │   └── DataController.java    ← /api/data
+│   ├── service/
+│   │   └── DataService.java
+│   ├── repository/
+│   │   └── DataRepository.java
+│   ├── model/
+│   │   └── Data.java
+│   ├── CorsConfig.java
+│   └── WeatherStationApplication.java
+├── src/main/resources/
+│   └── application.properties
+└── frontend/
+    └── index.html                 ← Dashboard
 ```
 
 ---
@@ -124,7 +134,9 @@ DB_PASSWORD=your_postgres_password
 ./mvnw spring-boot:run
 ```
 
-API runs at `http://localhost:8082`
+**6. Open the frontend**
+
+Open `frontend/index.html` with Live Server — the dashboard connects automatically to `http://localhost:8082`.
 
 ---
 
@@ -153,12 +165,6 @@ GET /api/data/getAll
 
 ## 🔮 Roadmap
 
-### Phase 2 — Frontend Dashboard
-- Real-time temperature and pressure display
-- Historical data charts
-- Min/Max/Average statistics
-- Auto-refresh every few minutes
-
 ### Phase 3 — ESP32 + BMP280 Integration
 - ESP32 reads BMP280 data via I2C
 - Sends POST request to backend every N seconds
@@ -171,6 +177,12 @@ GET /api/data/getAll
 - Filter data by sensor
 - Compare readings across locations
 - Support for additional sensors (DHT22 for humidity, etc.)
+
+---
+
+## 🤖 AI Assistance
+
+The frontend dashboard (`frontend/index.html`) was built with the assistance of Claude AI (Anthropic). The backend, database schema, and ESP32 integration were designed and implemented manually.
 
 ---
 
