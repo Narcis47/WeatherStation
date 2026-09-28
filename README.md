@@ -4,7 +4,7 @@ A full-stack IoT weather monitoring system — collect real-time temperature and
 
 Built with Java & Spring Boot on the backend, vanilla HTML/CSS/JavaScript on the frontend, and C++ on the ESP32 microcontroller.
 
-🌐 Live Demo: https://narcis47.github.io/WeatherStation/
+🚫 Live Demo CLOSED: https://narcis47.github.io/WeatherStation/
 ---
 
 ## 📸 Dashboard Preview
